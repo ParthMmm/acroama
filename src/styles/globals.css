@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-item {
+  @apply flex  py-1.5 text-sm text-gray-700 dark:text-gray-200 m-2 rounded-lg cursor-pointer;
+}
+
+.dropdown-active {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.divider {
+  @apply border-b dark:border-gray-700/80;
+}

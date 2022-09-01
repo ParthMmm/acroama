@@ -14,14 +14,27 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components*": ["src/components*"],
+      "@abis*": ["src/abis*"],
+      "@api*": ["src/api*"],
+
+      "@utils*": ["src/utils*"],
+      "@gql*": ["src/graphql*"],
+      "@generated*": ["src/generated*"],
+      "@lib*": ["src/lib*"],
+      "@queries*": ["src/queries*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "next-auth.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.js"
+    "**/*.js",
+    "environment.d.ts"
   ],
   "exclude": ["node_modules"]
 }

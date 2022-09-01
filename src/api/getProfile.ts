@@ -100,8 +100,8 @@ export const getDefaultProfileRequest = (ethereumAddress: string) => {
   });
 };
 
-export const getDefaultProfile = async () => {
-  const address = '0xf3B72aA42137bdEAc853E1587554e973A9B754e5';
+export const getDefaultProfile = async (userAddress: string) => {
+  const address = userAddress;
   console.log('get default profile: address', address);
 
   const result = await getDefaultProfileRequest(address);
