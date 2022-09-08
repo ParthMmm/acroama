@@ -16,6 +16,11 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['s1.ticketm.net', 'assets0.dostuffmedia.com', 'pbs.twimg.com'],
+    domains: [
+      's1.ticketm.net',
+      'assets0.dostuffmedia.com',
+      'pbs.twimg.com',
+      'lens.infura-ipfs.io',
+    ],
   },
 });

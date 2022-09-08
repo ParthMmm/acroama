@@ -1,7 +1,6 @@
 import { Profile } from '@generated/types';
 import create from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
-import { mountStoreDevtool } from 'simple-zustand-devtools';
 
 interface AppState {
   profiles: Profile[] | [];
@@ -47,7 +46,3 @@ export const useAppPersistStore = create(
     { name: 'acroama.store' }
   )
 );
-
-if (process.env.NODE_ENV === 'development') {
-  mountStoreDevtool('Store', useAppStore);
-}

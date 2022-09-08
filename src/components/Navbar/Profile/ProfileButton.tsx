@@ -13,12 +13,14 @@ import {
   UserIcon,
 } from '@heroicons/react/outline';
 import { Fragment } from 'react';
+import { useDisconnect } from 'wagmi';
+
 type Props = {};
 
 function ProfileButton({}: Props) {
   const currentProfile = useAppStore((state) => state.currentProfile);
   const profiles = useAppStore((state) => state.profiles);
-
+  const { disconnect } = useDisconnect();
   console.log(currentProfile, '🥷');
 
   return (
@@ -28,7 +30,7 @@ function ProfileButton({}: Props) {
           <Menu.Button
             // as='img'
             // src={getAvatar(currentProfile as Profile)}
-            className='w-8 h-8 rounded-full bg-purple-400  cursor-pointer dark:border-gray-700/80 items-center justify-center flex'
+            className='w-8 h-8 rounded-full   cursor-pointer dark:border-gray-700/80 items-center justify-center flex'
             // alt={currentProfile?.handle}
           >
             <span>
@@ -77,7 +79,7 @@ function ProfileButton({}: Props) {
                 </div>
               </Menu.Item>
               <div className='border-b border-gray-700/80' />
-              <Menu.Item>
+              <Menu.Item as={'a'} href={`/u/${currentProfile?.handle}`}>
                 <div className='flex items-center space-x-2 my-2'>
                   <span>
                     <svg
@@ -137,7 +139,9 @@ function ProfileButton({}: Props) {
                       />
                     </svg>
                   </span>
-                  <div className='pl-1'>Logout</div>
+                  <div className='pl-1'>
+                    <button onClick={() => disconnect()}>Logout</button>
+                  </div>
                 </div>
               </Menu.Item>
 

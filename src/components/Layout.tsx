@@ -8,6 +8,7 @@ import { gql, useQuery } from '@apollo/client';
 import { ProfileFields } from '@gql/ProfileFields';
 import clearAuthData from '@lib/clearAuthData';
 import { Profile } from '@generated/types';
+import { Toaster } from 'react-hot-toast';
 
 type Props = {
   children: ReactNode;
@@ -134,8 +135,8 @@ function Layout({ children }: Props) {
         <meta name='description' content='music' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
-      <div className='fixed bg-[#fcfcfc] dark:bg-[#2c2d2f] transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
+      <Toaster position='bottom-center' />
+      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414] transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
         <Navbar />
         {children}
       </div>

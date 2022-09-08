@@ -73,7 +73,7 @@ function CreateEventModal({}: Props) {
         //   referralFee: 10.5,
         // },
         // revertCollectModule: true,
-        freeCollectModule: { followerOnly: true },
+        freeCollectModule: { followerOnly: false },
         // limitedFeeCollectModule: {
         //   amount: {
         //     currency: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',

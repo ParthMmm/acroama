@@ -11,10 +11,15 @@ import { prettyJSON } from 'src/helpers';
 import { useAppPersistStore, useAppStore } from 'src/store/app';
 import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
 import { Profile } from '@generated/types';
+import { PROFILE_QUERY } from '@queries/profile';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { CURRENT_PROFILE_QUERY } from '@components/Layout';
+import toast from 'react-hot-toast';
 
 type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setHasProfile: Dispatch<SetStateAction<boolean>>;
 };
 
 const generateChallenge = (address: string) => {
@@ -40,7 +45,24 @@ const authenticate = (address: string, signature: string) => {
   });
 };
 
-function LoginModal({ isOpen, setIsOpen }: Props) {
+const CHALLENGE_QUERY = gql`
+  query Challenge($request: ChallengeRequest!) {
+    challenge(request: $request) {
+      text
+    }
+  }
+`;
+
+export const AUTHENTICATE_MUTATION = gql`
+  mutation Authenticate($request: SignedAuthChallenge!) {
+    authenticate(request: $request) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+function LoginModal({ isOpen, setIsOpen, setHasProfile }: Props) {
   const { chain } = useNetwork();
   const { connectors, error, connectAsync } = useConnect();
   const { address, connector: activeConnector } = useAccount();
@@ -53,33 +75,45 @@ function LoginModal({ isOpen, setIsOpen }: Props) {
   const setCurrentProfile = useAppStore((state) => state.setCurrentProfile);
   const setProfileId = useAppPersistStore((state) => state.setProfileId);
   const setIsConnected = useAppPersistStore((state) => state.setIsConnected);
+
+  const [loadChallenge, { error: errorChallenge, loading: challengeLoading }] =
+    useLazyQuery(CHALLENGE_QUERY, {
+      fetchPolicy: 'no-cache',
+    });
+  const [authenticate, { error: errorAuthenticate, loading: authLoading }] =
+    useMutation(AUTHENTICATE_MUTATION);
+  const [getProfiles, { error: errorProfiles, loading: profilesLoading }] =
+    useLazyQuery(CURRENT_PROFILE_QUERY);
+
   const handleLogIn = async () => {
     // we request a challenge from the server
     if (address) {
-      const challengeResponse = await generateChallenge(address);
+      const challengeResponse = await loadChallenge({
+        variables: { request: { address } },
+      });
 
-      console.log({ challengeResponse });
-
+      console.log({ challengeResponse, errorChallenge });
+      console.log(challengeResponse.data.challenge.text);
       // sign the text with the wallet
 
-      if (!challengeResponse?.data?.challenge?.text) {
-        return;
-      }
+      // if (challengeResponse?.data?.challenge?.text) {
+      //   return toast.error("Error: couldn't get challenge from server");
+      // }
 
       const signature = await signMessageAsync({
         message: challengeResponse?.data?.challenge?.text,
       });
 
-      console.log({ signature });
+      const accessTokens = await authenticate({
+        variables: { request: { address, signature } },
+      });
 
-      const accessTokens = await authenticate(address, signature);
       prettyJSON('login: result', accessTokens.data);
 
       if (accessTokens.data?.authenticate?.accessToken) {
         setIsAuthenticated(true);
       }
 
-      //   setAuthenticationToken(accessTokens.data.authenticate.accessToken);
       Cookies.set(
         'accessToken',
         accessTokens.data.authenticate.accessToken,
@@ -90,6 +124,28 @@ function LoginModal({ isOpen, setIsOpen }: Props) {
         accessTokens.data.authenticate.accessToken,
         COOKIE_CONFIG
       );
+
+      const { data: profilesData } = await getProfiles({
+        variables: { ownedBy: address },
+      });
+
+      if (profilesData?.profiles?.items?.length === 0) {
+        console.log('no profiles');
+      } else {
+        const profiles: Profile[] = profilesData?.profiles?.items
+          ?.slice()
+          ?.sort((a: Profile, b: Profile) => Number(a.id) - Number(b.id))
+          ?.sort((a: Profile, b: Profile) =>
+            !(a.isDefault !== b.isDefault) ? 0 : a.isDefault ? -1 : 1
+          );
+        const currentProfile = profiles[0];
+        setIsAuthenticated(true);
+        setProfiles(profiles);
+        if (currentProfile) {
+          setCurrentProfile(currentProfile);
+          setProfileId(currentProfile.id);
+        }
+      }
 
       //   if (accessTokens.data?.authenticate?.accessToken) {
       //     const { data: profilesData } = await getUser(address);
@@ -155,20 +211,6 @@ function LoginModal({ isOpen, setIsOpen }: Props) {
         <Dialog.Description>
           <div className='mt-6 text-white font-light '>
             <span>{'Sign the message with your Lens profile'}</span>
-          </div>
-          <div className='flex flex-col'>
-            {/* <input
-              className='w-2/3 border-4 border-green-700/80 rounded-xl bg-[#2c2d2f] p-2 mt-4 text-white mb-4'
-              placeholder='username'
-              //   onChange={
-              //     // (e) => setUserName(e.target.value)
-              //   }
-            /> */}
-            {/* <div> */}{' '}
-            {/* {errorMessage && (
-                <span className='text-red-400'>{errorMessage}</span>
-              )} */}
-            {/* </div> */}
           </div>
         </Dialog.Description>
         <div className='flex flex-row justify-between mt-10'>

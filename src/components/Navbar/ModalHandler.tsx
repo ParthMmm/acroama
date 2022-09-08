@@ -15,15 +15,20 @@ function ModalHandler({ isOpen, setIsOpen }: Props) {
   const profiles = useAppStore((state) => state.profiles);
 
   const isAuthenticated = useAppPersistStore((state) => state.isAuthenticated);
+  const [hasProfile, setHasProfile] = useState(false);
   console.log({ isConnected, isAuthenticated, profiles, isOpen });
 
   const innerModal = () => {
     if (isConnected && !isAuthenticated) {
-      return <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />;
+      return (
+        <LoginModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          setHasProfile={setHasProfile}
+        />
+      );
     }
     if (isConnected && isAuthenticated && profiles.length === 0) {
-      console.log('🚣‍♂️');
-
       return <CreateModal isOpen={isOpen} setIsOpen={setIsOpen} />;
     } else {
       setIsOpen(false);
