@@ -17,6 +17,12 @@ import { loggerLink } from '@trpc/client/links/loggerLink';
 import { withTRPC } from '@trpc/next';
 import superjson from 'superjson';
 import type { AppRouter } from '../server/router';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const { chains, provider } = configureChains(
   [chain.polygonMumbai],

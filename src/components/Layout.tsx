@@ -124,9 +124,9 @@ function Layout({ children }: Props) {
     setCurrentProfile,
   ]);
 
-  if (loading || !mounted) {
-    return <div>loading</div>;
-  }
+  // if (loading || !mounted) {
+  //   return <div>loading</div>;
+  // }
 
   return (
     <>
@@ -136,8 +136,9 @@ function Layout({ children }: Props) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Toaster position='bottom-center' />
-      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414] transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
+      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
         <Navbar />
+
         {children}
       </div>
     </>

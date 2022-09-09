@@ -23,4 +23,8 @@ export default defineNextConfig({
       'lens.infura-ipfs.io',
     ],
   },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
 });

@@ -31,7 +31,6 @@ function ModalHandler({ isOpen, setIsOpen }: Props) {
     if (isConnected && isAuthenticated && profiles.length === 0) {
       return <CreateModal isOpen={isOpen} setIsOpen={setIsOpen} />;
     } else {
-      setIsOpen(false);
       return null;
     }
   };

@@ -103,7 +103,7 @@ function Navbar({}: Props) {
   // console.log(ethersProvider.getGasPrice());
 
   return (
-    <nav className='sticky top-0 z-10 w-full bg-white rounded-br-xl rounded-bl-xl border-b shadow-xl dark:bg-green-700 dark:border-b-green-500/80'>
+    <nav className='sticky top-0 z-10 w-full bg-[#141414]  border-b  dark:border-b-green-500/80'>
       <div className='container px-5 mx-auto max-w-screen-xl'>
         <div className='flex relative justify-between items-center h-14 sm:h-16'>
           <h1 className='text-white text-4xl font-bold'>

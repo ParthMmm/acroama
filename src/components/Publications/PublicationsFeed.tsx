@@ -91,10 +91,13 @@ function Events({}: Props) {
   // const publications = filteredPublications.filter((n: any) => n);
 
   return (
-    <div className='grid grid-flow-col	w-full h-full'>
-      {data.map((event) => {
-        return <EventCard key={event.id} event={event} />;
-      })}
+    <div className=' flex flex-col w-full h-full justify-start'>
+      <h2 className='font-semibold text-2xl mb-2 mx-12'>latest events</h2>
+      <div className='grid grid-flow-col'>
+        {data.map((event) => {
+          return <EventCard key={event.id} event={event} />;
+        })}
+      </div>
     </div>
   );
 }
