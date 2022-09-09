@@ -1,5 +1,5 @@
 import { env } from './src/env/server.mjs';
-
+import withBundleAnalyzer from '@next/bundle-analyzer';
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -8,8 +8,13 @@ import { env } from './src/env/server.mjs';
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 function defineNextConfig(config) {
-  return config;
+  return bundleAnalyzer(config);
 }
 
 export default defineNextConfig({

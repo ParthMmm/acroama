@@ -1,19 +1,13 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { gql, useQuery } from '@apollo/client';
-import Login from './Login/Login';
-import Create from './Create/Create';
+import { useQuery } from '@apollo/client';
 import { useAppPersistStore, useAppStore } from 'src/store/app';
-import { apolloClient } from '@api/client';
 import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
-import { AUTHENTICATION, GET_CHALLENGE } from '@queries/auth';
 import { Profile } from '../../generated/types';
 import { CURRENT_USER_QUERY } from '@api/getProfiles';
 import { useEffect, useState } from 'react';
-import { setDefaultProfile } from '@api/setDefaultProfile';
 import ProfileButton from './Profile/ProfileButton';
-import LoginModal from './Login/LoginModal';
-import ModalHandler from './ModalHandler';
-import { ethersProvider } from 'src/ethers.service';
+
+import Auth from './Auth';
 type Props = {};
 
 function Navbar({}: Props) {
@@ -54,9 +48,7 @@ function Navbar({}: Props) {
       });
 
       if (profiles.length === 0) {
-        console.log(null, '🪨');
       } else {
-        console.log(profiles, '🧑‍🤝‍🧑');
         setProfiles(profiles);
       }
     },
@@ -72,11 +64,10 @@ function Navbar({}: Props) {
 
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileId, isConnected, isAuthenticated, profiles, address]);
 
   const AuthButtons = () => {
-    // return <ProfileButton />;
-
     if (!isConnected) {
       return (
         <ConnectButton
@@ -86,32 +77,24 @@ function Navbar({}: Props) {
     }
 
     if (isConnected && !profileId) {
-      return <Login />;
+      return <Auth />;
     }
-    // if (isConnected && isAuthenticated && profiles.length === 0) {
-    //   return <Create />;
-    // }
 
     if (isConnected && isAuthenticated && profileId) {
       return <ProfileButton />;
     }
   };
 
-  // setDefaultProfile();
-
-  // console.log(ethersProvider.getSigner());
-  // console.log(ethersProvider.getGasPrice());
-
   return (
-    <nav className='sticky top-0 z-10 w-full bg-[#141414]  border-b  dark:border-b-green-500/80'>
-      <div className='container px-5 mx-auto max-w-screen-xl'>
-        <div className='flex relative justify-between items-center h-14 sm:h-16'>
-          <h1 className='text-white text-4xl font-bold'>
-            <a href={'/'}>spectō</a>
-          </h1>
-
-          <div className='flex flex-row gap-4'>{AuthButtons()}</div>
-          <ModalHandler isOpen={isOpen} setIsOpen={setIsOpen} />
+    <nav>
+      <div className='sticky top-0 z-10 w-full bg-[#141414] border-b  dark:border-b-green-500/80'>
+        <div className='container px-5 mx-auto max-w-screen-xl'>
+          <div className='flex relative justify-between items-center h-14 sm:h-16'>
+            <h1 className='text-white text-4xl font-bold'>
+              <a href={'/'}>spectō</a>
+            </h1>
+            <div className='flex flex-row gap-4'>{AuthButtons()}</div>
+          </div>
         </div>
       </div>
     </nav>

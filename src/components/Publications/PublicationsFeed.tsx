@@ -1,6 +1,5 @@
 import { apolloClient } from '@api/client';
 import { gql } from '@apollo/client/core';
-import EventCard from './PublicationCard';
 import { GET_PUBLICATIONS } from '@queries/publication';
 import { useAppPersistStore } from 'src/store/app';
 import { prettyJSON } from 'src/helpers';
@@ -10,6 +9,9 @@ import { useQuery } from '@apollo/client';
 import Spinner from '@components/Spinner';
 import { trpc } from '@utils/trpc';
 type Props = {};
+import dynamic from 'next/dynamic';
+
+const EventCard = dynamic(() => import('../Publications/PublicationCard'));
 
 // const getPublicationsRequest = (getPublicationQuery: any) => {
 //   return apolloClient.query({

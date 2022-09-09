@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
 import Head from 'next/head';
-import Navbar from '@components/Navbar';
 import { useAppPersistStore, useAppStore } from 'src/store/app';
 import Cookies from 'js-cookie';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
@@ -9,6 +8,7 @@ import { ProfileFields } from '@gql/ProfileFields';
 import clearAuthData from '@lib/clearAuthData';
 import { Profile } from '@generated/types';
 import { Toaster } from 'react-hot-toast';
+import dynamic from 'next/dynamic';
 
 type Props = {
   children: ReactNode;
@@ -31,6 +31,8 @@ export const CURRENT_PROFILE_QUERY = gql`
   }
   ${ProfileFields}
 `;
+
+const Navbar = dynamic(() => import('@components/Navbar'), { ssr: false });
 
 function Layout({ children }: Props) {
   const setProfiles = useAppStore((state) => state.setProfiles);
@@ -132,13 +134,10 @@ function Layout({ children }: Props) {
     <>
       <Head>
         <title>acroama</title>
-        <meta name='description' content='music' />
-        <link rel='icon' href='/favicon.ico' />
       </Head>
       <Toaster position='bottom-center' />
       <div className='fixed bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
         <Navbar />
-
         {children}
       </div>
     </>

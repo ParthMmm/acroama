@@ -2,10 +2,15 @@ import { useQuery } from '@apollo/client';
 import { PROFILE_QUERY } from '@queries/profile';
 import { useRouter } from 'next/router';
 import { useAppStore } from 'src/store/app';
-import Image from 'next/image';
+import Image from 'next/future/image';
 import Spinner from '@components/Spinner';
-import ProfilePublicationsFeed from './ProfilePublicationsFeed';
+import dynamic from 'next/dynamic';
+
 type Props = {};
+
+const ProfilePublicationsFeed = dynamic(
+  () => import('./ProfilePublicationsFeed')
+);
 
 function ProfileView({}: Props) {
   const {

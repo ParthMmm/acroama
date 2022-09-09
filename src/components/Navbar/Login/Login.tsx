@@ -16,7 +16,6 @@ import { useAppPersistStore, useAppStore } from 'src/store/app';
 import { ProfileFields } from '@gql/ProfileFields';
 import { CURRENT_PROFILE } from '@queries/auth';
 import { Profile } from '../../../generated/types';
-import ModalHandler from '../ModalHandler';
 
 // const getUser = (address: string) => {
 //   return apolloClient.query({
@@ -127,7 +126,7 @@ function Login({}: Props) {
           />
           <div>Login</div>
         </button>
-        <ModalHandler isOpen={isOpen} setIsOpen={setIsOpen} />
+        {/* <ModalHandler isOpen={isOpen} setIsOpen={setIsOpen} /> */}
       </div>
     </div>
   );

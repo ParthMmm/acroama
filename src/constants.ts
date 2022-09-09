@@ -1,4 +1,5 @@
 // Environments
+import { chain } from 'wagmi';
 
 // If ready for production, change boolean value to 'true'
 export const IS_PRODUCTION = false;
@@ -10,6 +11,8 @@ export const ENV_DEV = process.env.NODE_ENV === 'development';
 export const CURRENT_CHAIN_ID: number = ENV_PROD && IS_PRODUCTION ? 137 : 80001;
 export const CURRENT_CHAIN_NAME =
   ENV_PROD && IS_PRODUCTION ? 'Polygon' : 'Polygon Mumbai';
+
+export const IS_MAINNET = process.env.NEXT_PUBLIC_IS_MAINNET === 'true';
 
 export const LENS_API_URL =
   ENV_PROD && IS_PRODUCTION
@@ -25,3 +28,15 @@ export const LENS_PERIPHERY_CONTRACT =
   ENV_PROD && IS_PRODUCTION
     ? '0xeff187b4190E551FC25a7fA4dFC6cf7fDeF7194f'
     : '0xD5037d72877808cdE7F669563e9389930AF404E8';
+
+export const POLYGON_MAINNET = {
+  ...chain.polygon,
+  name: 'Polygon Mainnet',
+  rpcUrls: { default: 'https://polygon-rpc.com' },
+};
+export const POLYGON_MUMBAI = {
+  ...chain.polygonMumbai,
+  name: 'Polygon Mumbai',
+  rpcUrls: { default: 'https://rpc-mumbai.maticvigil.com' },
+};
+export const CHAIN_ID = IS_MAINNET ? POLYGON_MAINNET.id : POLYGON_MUMBAI.id;

@@ -1,17 +1,7 @@
 import '../styles/globals.css';
 import type { AppType } from 'next/dist/shared/lib/utils';
 import '@rainbow-me/rainbowkit/styles.css';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import {
-  darkTheme,
-  getDefaultWallets,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
-import { apolloClient } from '@api/client';
-import Layout from '@components/Layout';
+
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { withTRPC } from '@trpc/next';
@@ -19,41 +9,35 @@ import superjson from 'superjson';
 import type { AppRouter } from '../server/router';
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+import Spinner from '@components/Spinner';
+import { useAppPersistStore } from 'src/store/app';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
-const { chains, provider } = configureChains(
-  [chain.polygonMumbai],
-  [alchemyProvider(process.env.ALCHEMY_KEY), publicProvider()]
-);
-
-const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
-  chains,
+const Layout = dynamic(() => import('@components/Layout'), { suspense: true });
+const Providers = dynamic(() => import('@components/Providers'), {
+  suspense: true,
 });
 
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-});
+const rehydrateState = async () => {
+  await useAppPersistStore.persist.rehydrate();
+};
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  // rehydrateState();
+
   return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider
-        chains={chains}
-        theme={darkTheme({ accentColor: 'green' })}
-      >
-        <ApolloProvider client={apolloClient}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ApolloProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <Suspense fallback={<Spinner />}>
+      <Providers>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Providers>
+    </Suspense>
   );
 };
 
