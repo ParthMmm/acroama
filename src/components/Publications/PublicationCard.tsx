@@ -4,6 +4,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import LensActions from './LensActions';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 type Props = {
   publication: LensterPublication;
@@ -35,12 +36,19 @@ type EventCardProp = {
 function EventCard({ event }: EventCardProp) {
   console.log(event);
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 8 }}
+    // <motion.div
+    //   whileHover={{ scale: 1.05 }}
+    //   transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+    // >
+    <Link
+      href={{
+        pathname: `/e/${event?.publicationId}`,
+        query: { publicationId: event.publicationId },
+      }}
+      as={`/e/${event?.publicationId}`}
     >
-      <div className='w-96 flex flex-row h-72  mx-auto shadow-xl'>
-        <div className='bg-green-700 p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none'>
+      <div className='w-96 flex flex-row h-72  mx-auto shadow-xl hover:drop-shadow-xl hover:drop-shadow-gray-500 hover:cursor-pointer'>
+        <div className='bg-green-700 p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none '>
           <div>
             <div className='font-bold text-xl'>{event.name}</div>
             <div className='text-lg'>{event.artist.name}</div>
@@ -58,7 +66,7 @@ function EventCard({ event }: EventCardProp) {
             alt='tour image'
           />
         </div> */}
-        <div className='flex flex-col border-2 border-green-700 border-l-0 rounded-xl rounded-l-none  justify-between p-4'>
+        <div className='flex flex-col border-2 border-green-700 border-l-0 rounded-xl rounded-l-none  justify-between p-4 transition-all '>
           <div>
             <div className='flex space-x-1 items-center '>
               <div className='hover:bg-green-400 p-1.5 rounded-full hover:bg-opacity-40 text-green-600'>
@@ -116,7 +124,8 @@ function EventCard({ event }: EventCardProp) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </Link>
+    // </motion.div>
   );
 }
 

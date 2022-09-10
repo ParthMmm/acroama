@@ -67,7 +67,7 @@ function Events({}: Props) {
   // const test = trpc.useQuery(['test.getAll']);
 
   const { data, isLoading, error } = trpc.useQuery(['event.getAllEvents']);
-
+  console.log(isLoading, '🔥');
   if (isLoading) {
     return <Spinner />;
   }
@@ -77,20 +77,6 @@ function Events({}: Props) {
   if (!data) {
     return <></>;
   }
-
-  console.log(data);
-
-  // const filteredPublications = data.publications.items.map(
-  //   (post: { __typename: string; appId: string }) => {
-  //     if (post.__typename === 'Post' && post.appId === 'acroama') {
-  //       return post;
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  // );
-
-  // const publications = filteredPublications.filter((n: any) => n);
 
   return (
     <div className=' flex flex-col w-full h-full justify-start'>
@@ -102,6 +88,17 @@ function Events({}: Props) {
       </div>
     </div>
   );
+  // const filteredPublications = data.publications.items.map(
+  //   (post: { __typename: string; appId: string }) => {
+  //     if (post.__typename === 'Post' && post.appId === 'acroama') {
+  //       return post;
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+  // );
+
+  // const publications = filteredPublications.filter((n: any) => n);
 }
 
 export default Events;

@@ -1,11 +1,15 @@
 import { NextPage } from 'next';
 import React from 'react';
-
+// import Hero from './Hero';
 import dynamic from 'next/dynamic';
 
-const Hero = dynamic(() => import('@components/Home/Hero'));
+const Hero = dynamic(() => import('@components/Home/Hero'), {
+  suspense: false,
+  ssr: false,
+});
 const Events = dynamic(
-  () => import('@components/Publications/PublicationsFeed')
+  () => import('@components/Publications/PublicationsFeed'),
+  { ssr: false }
 );
 
 export const Home: NextPage = () => {
