@@ -41,6 +41,7 @@
     "omit-deep": "^0.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.35.0",
     "react-hot-toast": "^2.3.0",
     "react-query": "3",
     "superjson": "^1.9.1",

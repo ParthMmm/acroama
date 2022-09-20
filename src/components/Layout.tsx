@@ -133,10 +133,10 @@ function Layout({ children }: Props) {
   return (
     <>
       <Head>
-        <title>acroama</title>
+        <title>specto</title>
       </Head>
       <Toaster position='bottom-center' />
-      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  h-screen  w-screen text-white'>
+      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  h-screen  w-screen dark:text-white text-black antialiased'>
         <Navbar />
         {children}
       </div>

@@ -8,8 +8,8 @@ export default function Document() {
         <link rel='icon' href='/favicon.ico' />
         <link
           rel='preload'
-          href='https://fonts.googleapis.com/css?family=Archivo:400,400i,500,500i,600,600i,700,700i&display=optional'
           as='font'
+          href='https://fonts.googleapis.com/css?family=Archivo:400,400i,500,500i,600,600i,700,700i&display=optional'
         />
       </Head>
       <body>

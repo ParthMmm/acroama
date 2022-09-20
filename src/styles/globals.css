@@ -7,6 +7,15 @@
     font-family: Archivo, system-ui, sans-serif;
   }
 }
+@layer components {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 .menu-item {
   @apply flex  py-1.5 text-sm text-gray-700 dark:text-gray-200 m-2 rounded-lg cursor-pointer;
@@ -18,4 +27,25 @@
 
 .divider {
   @apply border-b dark:border-gray-700/80;
+}
+
+.group:hover .group-hover\:shadow-highlight-blurple {
+  --tw-shadow: inset 0 -0.5em 0 0 #5200ff;
+  --tw-shadow-colored: inset 0 -0.5em 0 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.group:hover .group-hover\:shadow-underline-franklin {
+  --tw-shadow: inset 0 -1px 0 0 #3cffd0;
+  --tw-shadow-colored: inset 0 -1px 0 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.group:hover .group-hover\:transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.group:hover .group-hover\:ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -47,10 +47,14 @@ function EventCard({ event }: EventCardProp) {
       }}
       as={`/e/${event?.publicationId}`}
     >
-      <div className='w-96 flex flex-row h-72  mx-auto shadow-xl hover:drop-shadow-xl hover:drop-shadow-gray-500 hover:cursor-pointer'>
-        <div className='bg-green-700 p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none '>
+      <div className='w-96 flex flex-row h-72   mx-auto shadow-xl border-2 border-[#EFD9CE] rounded-sm hover:cursor-pointer group'>
+        <div className=' p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none border-r-2 border-bribbon-500  '>
           <div>
-            <div className='font-bold text-xl'>{event.name}</div>
+            <h2 className='font-bold text-xl shadow-2xl  '>
+              <a className='group-hover:shadow-highlight-blurple'>
+                {event.name}
+              </a>
+            </h2>
             <div className='text-lg'>{event.artist.name}</div>
           </div>
 
@@ -66,10 +70,10 @@ function EventCard({ event }: EventCardProp) {
             alt='tour image'
           />
         </div> */}
-        <div className='flex flex-col border-2 border-green-700 border-l-0 rounded-xl rounded-l-none  justify-between p-4 transition-all '>
+        <div className='flex flex-col  justify-between p-4 transition-all '>
           <div>
             <div className='flex space-x-1 items-center '>
-              <div className='hover:bg-green-400 p-1.5 rounded-full hover:bg-opacity-40 text-green-600'>
+              <div className=' p-1.5 rounded-full hover:bg-opacity-40 '>
                 <span>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -93,7 +97,7 @@ function EventCard({ event }: EventCardProp) {
             </div>
 
             <div className='flex space-x-1 items-center '>
-              <div className='hover:bg-green-400 p-1.5 rounded-full hover:bg-opacity-40 text-green-600'>
+              <div className='p-1.5 rounded-full hover:bg-opacity-40 '>
                 <span>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'

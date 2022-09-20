@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/nprogress.css';
 import type { AppType } from 'next/dist/shared/lib/utils';
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -8,15 +9,12 @@ import { withTRPC } from '@trpc/next';
 import superjson from 'superjson';
 import type { AppRouter } from '../server/router';
 import Router from 'next/router';
-import NProgress from 'nprogress';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import Spinner from '@components/Spinner';
 import { useAppPersistStore } from 'src/store/app';
 
-Router.events.on('routeChangeStart', () => NProgress.start());
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+import NProgress from '../components/nprogress';
 
 const Layout = dynamic(() => import('@components/Layout'), { suspense: true });
 const Providers = dynamic(() => import('@components/Providers'), {
@@ -35,6 +33,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Providers>
         <Layout>
           <Component {...pageProps} />
+          <NProgress />
         </Layout>
       </Providers>
     </Suspense>
