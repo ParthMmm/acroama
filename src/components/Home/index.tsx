@@ -36,7 +36,7 @@ export const Home: NextPage = () => {
 
   return (
     // <div className='flex flex-col items-center ml-auto mr-auto w-full h-full    mt-1 overflow-hidden '>
-    <div>
+    <div className=' '>
       <Hero />
       <Events />
       <CreateEvent />

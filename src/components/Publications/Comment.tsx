@@ -175,7 +175,7 @@ function Comment({ publication }: Props) {
   return (
     <div className=''>
       <form onSubmit={handleSubmit(createComment)}>
-        <div className='flex flex-col w-full border-2 p-4'>
+        <div className='flex flex-col w-full hidden md:visible p-4'>
           <div className=''>
             <textarea
               {...register('comment', { required: true })}

@@ -136,7 +136,7 @@ function Layout({ children }: Props) {
         <title>specto</title>
       </Head>
       <Toaster position='bottom-center' />
-      <div className='fixed bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  h-screen  w-screen dark:text-white text-black antialiased'>
+      <div className=' bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  dark:text-white text-black antialiased min-h-screen '>
         <Navbar />
         {children}
       </div>

@@ -32,7 +32,7 @@ function ProfileView({}: Props) {
 
   if (data) {
     return (
-      <div className=' mx-auto h-full flex flex-row justify-between overflow-y-scroll'>
+      <div className=' mx-auto h-full flex flex-row justify-between '>
         <div className='mt-20  mx-20 w-1/4 border-green-400 border-2 rounded-xl p-4 h-3/4'>
           <Image
             alt='profile picture'

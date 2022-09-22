@@ -180,15 +180,15 @@ function LensLogin() {
   return (
     <>
       <div className='flex flex-row justify-between '>
-        <div className='flex gap-12 items-center'>
+        <div className='flex  gap-4 md:gap-12 items-center'>
           <button
             onClick={handleLogIn}
             className='bg-green-500 hover:bg-green-600 border border-green-600 text-white focus:ring-green-400 px-3 py-1 flex items-center space-x-1.5 rounded-lg font-bold disabled:opacity-50 shadow-sm focus:ring-2 focus:ring-opacity-50 focus:ring-offset-1 outline-none'
           >
             <Image
               src='/lens.png'
-              width='16'
-              height='16'
+              width='4'
+              height='4'
               alt='len protocol logo'
             />
             <div>Sign In With Lens</div>

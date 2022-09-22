@@ -32,7 +32,7 @@ type EventCardProp = {
     publicationId: string;
   };
 };
-
+// border-[#EFD9CE]
 function EventCard({ event }: EventCardProp) {
   // console.log(event);
   return (
@@ -47,15 +47,15 @@ function EventCard({ event }: EventCardProp) {
       }}
       as={`/e/${event?.publicationId}`}
     >
-      <div className='w-96 flex flex-row h-72   mx-auto shadow-xl border-2 border-[#EFD9CE] rounded-sm hover:cursor-pointer group'>
-        <div className=' p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none border-r-2 border-bribbon-500  '>
-          <div>
-            <h2 className='font-bold text-xl shadow-2xl  '>
+      <div className='flex flex-row w-[90%] h-64  ml-4 shadow-[4px_4px_0] shadow-[#EFD9CE]   rounded-lg hover:cursor-pointer '>
+        <div className=' p-4  h-full  flex flex-col justify-between  space-y-2 rounded-xl rounded-r-none border-r-2 border-gray-800  '>
+          <div className='max-w-24'>
+            <h2 className='font-bold  text-lg md:text-xl shadow-2xl  '>
               <a className='group-hover:shadow-highlight-blurple'>
                 {event.name}
               </a>
             </h2>
-            <div className='text-lg'>{event.artist.name}</div>
+            <div className='sm:text-md  md:text-lg'>{event.artist.name}</div>
           </div>
 
           <div className='font-thin text-sm my-4 '>{event.description}</div>

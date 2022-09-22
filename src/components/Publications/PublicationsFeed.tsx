@@ -78,10 +78,12 @@ function Events({}: Props) {
   }
 
   return (
-    <div className=' flex flex-col w-full h-full justify-start gh'>
-      <h2 className='font-normal text-2xl mb-2 mx-12'>latest events</h2>
+    <div className=' flex flex-col  justify-start '>
+      <h2 className='font-normal text-2xl mb-2  mx-4 md:mx-12'>
+        latest events
+      </h2>
 
-      <div className='grid grid-flow-col'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 '>
         {data.map((event) => {
           return <EventCard key={event.id} event={event} />;
         })}

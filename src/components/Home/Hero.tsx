@@ -7,7 +7,7 @@ function Hero({}: Props) {
     <div className='h-2/6  '>
       <Marquee />
 
-      <div className='flex flex-col items-center justify-center my-48'>
+      <div className='flex flex-col items-center justify-center  my-12 mx-4 md:my-48'>
         <h1 className='font-normal text-7xl tracking-tighter	'>
           welcome to specto
         </h1>

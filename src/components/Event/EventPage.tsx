@@ -75,8 +75,8 @@ function EventPage({}: Props) {
   console.log(publicationQuery.data.publication);
 
   return (
-    <div className='flex flex-row mt-24'>
-      <div className=' max-w-md p-8  ml-48 flex border-2 sticky '>
+    <div className='flex flex-col md:flex-row lg:mt-24'>
+      <div className=' mx-4 p-4   flex border-2 md:sticky '>
         {/* {commentFeedQuery?.data?.publications?.items.map((comment) => {
           return (
             <div key={comment.id}>
@@ -156,7 +156,7 @@ function EventPage({}: Props) {
           <Actions publication={publicationQuery.data.publication} />
         </div>
       </div>
-      <div className='ml-12 w-2/4'>
+      <div className='mx-4'>
         <Comment publication={publicationQuery.data.publication} />
       </div>
     </div>
