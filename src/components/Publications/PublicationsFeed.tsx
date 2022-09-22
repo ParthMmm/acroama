@@ -67,7 +67,6 @@ function Events({}: Props) {
   // const test = trpc.useQuery(['test.getAll']);
 
   const { data, isLoading, error } = trpc.useQuery(['event.getAllEvents']);
-  console.log(isLoading, '🔥');
   if (isLoading) {
     return <Spinner />;
   }

@@ -736,22 +736,22 @@ export const CREATE_COMMENT_TYPED_DATA = gql`
   }
 `;
 
-export const COMMENT_FEED_QUERY = gql`
-  query ($request: PublicationsQueryRequest!) {
-    publications(request: $request) {
-      items {
-        ... on Comment {
-          ...CommentFields
-        }
-      }
-      pageInfo {
-        totalCount
-        next
-      }
-    }
-  }
-  ${CommentFields}
-`;
+// export const COMMENT_FEED_QUERY = gql`
+//   query ($request: PublicationsQueryRequest!) {
+//     publications(request: $request) {
+//       items {
+//         ... on Comment {
+//           ...CommentFields
+//         }
+//       }
+//       pageInfo {
+//         totalCount
+//         next
+//       }
+//     }
+//   }
+//   ${CommentFields}
+// `;
 
 export const GET_COMMENTS = gql`
   query ($request: PublicationsQueryRequest!) {
@@ -1108,3 +1108,36 @@ export const GET_COMMENTS = gql`
 //   ${CommentFields}
 //   ${MirrorFields}
 // `;
+
+export const CREATE_COLLECT_TYPED_DATA_MUTATION = gql`
+  mutation CreateCollectTypedData(
+    $options: TypedDataOptions
+    $request: CreateCollectRequest!
+  ) {
+    createCollectTypedData(options: $options, request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          CollectWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          pubId
+          data
+        }
+      }
+    }
+  }
+`;

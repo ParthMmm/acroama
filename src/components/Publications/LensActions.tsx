@@ -17,8 +17,6 @@ function LensActions({ publicationId }: Props) {
     },
   });
 
-  console.log(data);
-
   if (loading) {
     return <></>;
   }

@@ -49,3 +49,14 @@
 .group:hover .group-hover\:ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.hover\:shadow-highlight-blurple {
+  --tw-shadow: inset 0 -0.5em 0 0 #5200ff;
+  --tw-shadow-colored: inset 0 -0.5em 0 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.title {
+  @apply shadow-none hover:shadow-[inset_0_-0.5em_0_0] hover:shadow-burp-500 box-decoration-clone;
+}

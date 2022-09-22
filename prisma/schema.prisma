@@ -23,7 +23,7 @@ model Event {
   genre       Genre    @relation(fields: [genreId], references: [id])
   genreId     String
   ipfsURI    String 
-  publicationId String
+  publicationId String @unique
 }
 
 model Artist {

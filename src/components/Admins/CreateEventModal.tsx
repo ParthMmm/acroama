@@ -12,6 +12,23 @@ import { BigNumber, utils } from 'ethers';
 import dynamic from 'next/dynamic';
 type Props = {};
 
+export const MODULES_QUERY = gql`
+  query EnabledModules {
+    enabledModules {
+      collectModules {
+        moduleName
+        contractAddress
+      }
+    }
+    enabledModuleCurrencies {
+      name
+      symbol
+      decimals
+      address
+    }
+  }
+`;
+
 const createPostTypedData = (createPostTypedDataRequest: any) => {
   return apolloClient.mutate({
     mutation: gql(CREATE_POST_TYPED_DATA),

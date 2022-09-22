@@ -34,7 +34,7 @@ type EventCardProp = {
 };
 
 function EventCard({ event }: EventCardProp) {
-  console.log(event);
+  // console.log(event);
   return (
     // <motion.div
     //   whileHover={{ scale: 1.05 }}
