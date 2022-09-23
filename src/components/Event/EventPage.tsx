@@ -2,13 +2,22 @@ import { GET_COMMENTS, GET_SINGLE_PUBLICATION } from '@queries/publication';
 import { useRouter } from 'next/router';
 import { gql, useQuery } from '@apollo/client';
 import Spinner from '@components/Spinner';
-import Comment from '../Publications/Comment';
 import { useAppStore } from 'src/store/app';
 import { CommentFields } from '@queries/fragments/CommentFields';
 import { trpc } from '@utils/trpc';
 import PublicationCard from '@components/Publications/PublicationCard';
 import dayjs from 'dayjs';
-import Actions from './Actions/Actions';
+import dynamic from 'next/dynamic';
+
+const Actions = dynamic(() => import('./Actions/Actions'), {
+  suspense: true,
+  ssr: false,
+});
+
+const Comment = dynamic(() => import('../Publications/Comment'), {
+  suspense: true,
+  ssr: false,
+});
 
 type Props = {};
 
@@ -36,12 +45,12 @@ function EventPage({}: Props) {
   const router = useRouter();
   const currentProfile = useAppStore((state) => state.currentProfile);
 
-  const publicationId: string = router.query.publicationId || router.query.id;
+  const publicationId: any = router?.query?.publicationId || router?.query?.id;
 
-  const trpcQuery = trpc.useQuery([
-    'event.getEventById',
-    { publicationId: publicationId },
-  ]);
+  const trpcQuery = trpc.useQuery(
+    ['event.getEventById', { publicationId: publicationId }],
+    { enabled: !!publicationId }
+  );
 
   const publicationQuery = useQuery(GET_SINGLE_PUBLICATION, {
     variables: {
@@ -76,7 +85,7 @@ function EventPage({}: Props) {
 
   return (
     <div className='flex flex-col md:flex-row lg:mt-24'>
-      <div className=' mx-4 p-4   flex border-2 md:sticky '>
+      <div className=' mx-4 p-4 md:mx-24   flex border-2 md:sticky '>
         {/* {commentFeedQuery?.data?.publications?.items.map((comment) => {
           return (
             <div key={comment.id}>
@@ -87,10 +96,10 @@ function EventPage({}: Props) {
         {/* <PublicationCard event={trpcQuery.data} /> */}
         <div className='flex flex-col justify-between '>
           <div className='flex flex-col'>
-            <h1 className=' font-bold text-5xl tracking-[-0.08em]  shadow-[inset_0_-0.5em_0_0] shadow-burp-500'>
+            <h1 className=' font-bold   text-4xl md:text-5xl tracking-[-0.08em]  shadow-[inset_0_-0.5em_0_0] shadow-burp-500'>
               {trpcQuery.data?.name}
             </h1>
-            <h2 className=' text-3xl tracking-tighter'>
+            <h2 className=' sm:text-2xl md:text-3xl tracking-tighter'>
               {trpcQuery.data?.artist.name}
             </h2>
             <span className='font-light text-lg tracking-tight '>

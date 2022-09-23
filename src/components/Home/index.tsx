@@ -6,12 +6,12 @@ import CreateEvent from '@components/Admins/CreateEvent';
 import { gql, useQuery } from '@apollo/client';
 
 const Hero = dynamic(() => import('@components/Home/Hero'), {
-  suspense: false,
+  suspense: true,
   ssr: false,
 });
 const Events = dynamic(
   () => import('@components/Publications/PublicationsFeed'),
-  { ssr: false }
+  { suspense: true, ssr: false }
 );
 
 export const MODULES_QUERY = gql`
@@ -39,7 +39,7 @@ export const Home: NextPage = () => {
     <div className=' '>
       <Hero />
       <Events />
-      <CreateEvent />
+      {/* <CreateEvent /> */}
     </div>
   );
 };

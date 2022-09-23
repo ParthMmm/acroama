@@ -11,10 +11,18 @@ import { Profile } from '../../generated/types';
 import { CURRENT_USER_QUERY } from '@api/getProfiles';
 import { useEffect, useState } from 'react';
 import ProfileButton from './Profile/ProfileButton';
-import { CustomConnectButton } from '@components/CustomConnectButton';
+// import { CustomConnectButton } from '@components/CustomConnectButton';
 import Auth from './Auth';
+import dynamic from 'next/dynamic';
 type Props = {};
 
+const CustomConnectButton = dynamic(
+  () => import('@components/CustomConnectButton'),
+  {
+    suspense: true,
+    ssr: false,
+  }
+);
 function Navbar({}: Props) {
   const { chain } = useNetwork();
   const { connectors, error, connectAsync } = useConnect();

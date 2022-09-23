@@ -35,7 +35,7 @@ function Comment({ publication }: Props) {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  // const onSubmit = (data: any) => console.log(data);
   const [comment, setComment] = useState('');
   const {
     error,
@@ -56,8 +56,8 @@ function Comment({ publication }: Props) {
   });
 
   const { broadcast, loading: broadcastLoading } = useBroadcast({
-    onCompleted: (data) => {
-      console.log(data);
+    onCompleted: () => {
+      console.log('broadcasted');
     },
   });
 

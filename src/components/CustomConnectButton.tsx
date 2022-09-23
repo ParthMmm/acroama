@@ -6,7 +6,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { useAppPersistStore, useAppStore } from 'src/store/app';
 
-export const CustomConnectButton = () => {
+function CustomConnectButton() {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
@@ -100,4 +100,6 @@ export const CustomConnectButton = () => {
       }}
     </ConnectButton.Custom>
   );
-};
+}
+
+export default CustomConnectButton;
