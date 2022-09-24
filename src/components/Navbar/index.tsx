@@ -1,113 +1,15 @@
-import {
-  useConnectModal,
-  useAccountModal,
-  useChainModal,
-  ConnectButton,
-} from '@rainbow-me/rainbowkit';
-import { useQuery } from '@apollo/client';
-import { useAppPersistStore, useAppStore } from 'src/store/app';
-import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
-import { Profile } from '../../generated/types';
-import { CURRENT_USER_QUERY } from '@api/getProfiles';
-import { useEffect, useState } from 'react';
-import ProfileButton from './Profile/ProfileButton';
-// import { CustomConnectButton } from '@components/CustomConnectButton';
-import Auth from './Auth';
+import CustomConnectButton from '@components/CustomConnectButton';
 import dynamic from 'next/dynamic';
+
 type Props = {};
 
-const CustomConnectButton = dynamic(
-  () => import('@components/CustomConnectButton'),
-  {
-    suspense: true,
-    ssr: false,
-  }
-);
 function Navbar({}: Props) {
-  const { chain } = useNetwork();
-  const { connectors, error, connectAsync } = useConnect();
-  const { address, connector: activeConnector, isConnected } = useAccount();
-  const { signMessageAsync, isLoading: signLoading } = useSignMessage({});
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { openConnectModal } = useConnectModal();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
-
-  const profiles = useAppStore((state) => state.profiles);
-  const setProfiles = useAppStore((state) => state.setProfiles);
-  const profileId = useAppPersistStore((state) => state.profileId);
-  const setCurrentProfile = useAppStore((state) => state.setCurrentProfile);
-  const setProfileId = useAppPersistStore((state) => state.setProfileId);
-  const isAuthenticated = useAppPersistStore((state) => state.isAuthenticated);
-  const setIsAuthenticated = useAppPersistStore(
-    (state) => state.setIsAuthenticated
-  );
-
-  const { loading, refetch } = useQuery(CURRENT_USER_QUERY, {
-    variables: { ownedBy: address },
-    skip: !address,
-    onCompleted(data) {
-      const profiles: Profile[] = data?.profiles?.items
-        ?.slice()
-        ?.sort((a: Profile, b: Profile) => Number(a.id) - Number(b.id))
-        ?.sort((a: Profile, b: Profile) =>
-          !(a.isDefault !== b.isDefault) ? 0 : a.isDefault ? -1 : 1
-        );
-
-      console.log(data?.userSigNonces?.lensHubOnChainSigNonce, '🖋️');
-
-      profiles.map((p) => {
-        if (p.isDefault === true) {
-          setProfileId(p.id);
-          setCurrentProfile(p);
-        }
-      });
-
-      if (profiles.length === 0) {
-      } else {
-        setProfiles(profiles);
-      }
-    },
-  });
-  console.log({
-    isConnected,
-    isAuthenticated,
-    profiles,
-    address,
-    loading,
-    profileId,
-  });
-
-  useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileId, isConnected, isAuthenticated, profiles, address]);
-
-  const AuthButtons = () => {
-    if (!isConnected) {
-      return (
-        <div className='flex gap-3'>
-          <CustomConnectButton />
-        </div>
-      );
-    }
-
-    if (isConnected && !profileId) {
-      return <Auth />;
-    }
-
-    if (isConnected && isAuthenticated && profileId) {
-      return <ProfileButton />;
-    }
-  };
-
   return (
     <nav>
       <div className='sticky top-0 z-10 '>
         <div className='container px-5 mx-auto max-w-screen-xl'>
           <div className='flex flex-row justify-between items-center  sm:h-16 lg:pt-4 '>
-            <h1 className=' font-bold  '>
+            {/* <h1 className=' font-bold  '>
               <a href={'/'} className=''>
                 <svg
                   width='100%'
@@ -123,8 +25,10 @@ function Navbar({}: Props) {
                   />
                 </svg>
               </a>
-            </h1>
-            <div className='flex flex-row gap-4'>{AuthButtons()}</div>
+            </h1> */}
+            <div className='flex flex-row gap-4 '>
+              <CustomConnectButton />
+            </div>
           </div>
         </div>
       </div>
