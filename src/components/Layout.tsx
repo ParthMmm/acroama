@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode;
 };
 
-const Navbar = dynamic(() => import('@components/Navbar'), { ssr: false });
+// const Navbar = dynamic(() => import('@components/Navbar'), { ssr: false });
 
 function Layout({ children }: Props) {
   return (
@@ -15,7 +15,7 @@ function Layout({ children }: Props) {
         <title>specto</title>
       </Head>
       <div className=' bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  dark:text-white text-black antialiased min-h-screen '>
-        <Navbar />
+        {/* <Navbar /> */}
         {children}
       </div>
     </>
