@@ -14,8 +14,7 @@ function Layout({ children }: Props) {
       <Head>
         <title>specto</title>
       </Head>
-      <div className=' bg-[#fcfcfc] dark:bg-[#141414]  transition-all duration-700 ease-in-out  dark:text-white text-black antialiased min-h-screen '>
-        {/* <Navbar /> */}
+      <div className=' bg-[#141414]  transition-all duration-700 ease-in-out  dark:text-white  antialiased min-h-screen '>
         {children}
       </div>
     </>
