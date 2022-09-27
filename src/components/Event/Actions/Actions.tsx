@@ -1,5 +1,6 @@
 import { LensterPublication } from '@generated/lenstertypes';
 import Collect from './Collect';
+import Mirror from './Mirror';
 
 type Props = {
   publication: LensterPublication;
@@ -8,8 +9,8 @@ type Props = {
 function Actions({ publication }: Props) {
   // console.log(stats);
   return (
-    <div>
-      <Collect publication={publication} />{' '}
+    <div className='flex flex-row gap-6'>
+      <Collect publication={publication} /> <Mirror publication={publication} />
     </div>
   );
 }

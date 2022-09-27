@@ -2,7 +2,7 @@ import useBroadcast from '@utils/hooks/useBroadcast';
 import { v4 as uuidv4 } from 'uuid';
 import { useAccount, useContractWrite, useSignTypedData } from 'wagmi';
 import { LensHubProxy } from '@abis/LensHubProxy';
-import { useMutation } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { LENS_HUB_PROXY_ADDRESS } from '../../constants';
 import { CREATE_COMMENT_TYPED_DATA } from '@queries/publication';
 import {
@@ -19,6 +19,8 @@ import { uploadIpfs } from 'src/ipfs';
 import { LensterAttachment, LensterPublication } from '@generated/lenstertypes';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import CommentModal from '@components/Event/Actions/CommentModal';
+import * as Dialog from '@radix-ui/react-dialog';
 
 type Props = {
   publication: LensterPublication;
@@ -29,6 +31,8 @@ function Comment({ publication }: Props) {
   const profileId = useAppPersistStore((state) => state.profileId);
   const currentProfile = useAppStore((state) => state.currentProfile);
   const [attachments, setAttachments] = useState<LensterAttachment[]>([]);
+  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -173,45 +177,34 @@ function Comment({ publication }: Props) {
   };
 
   return (
-    <div className=''>
-      <form onSubmit={handleSubmit(createComment)}>
-        <div className='flex flex-col w-full hidden md:visible p-4'>
-          <div className=''>
-            <textarea
-              {...register('comment', { required: true })}
-              placeholder='comment'
-              className='w-full p-4 rounded-md resize-none text-white bg-grod-400 outline-none focus:placeholder-opacity-25 focus:ring focus:ring-burp-500 '
-              onChange={(e) => setComment(e.target.value)}
+    <>
+      <CommentModal
+        open={open}
+        setOpen={setOpen}
+        createComment={createComment}
+        setComment={setComment}
+        isLoading={isLoading}
+      />
+      <button onClick={() => setOpen(true)}>
+        <div className='flex px-3 font-bold h-10  rounded-lg transition-transform hover:scale-105 align-middle items-center bg-black dark:bg-white text-black '>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-4 h-4'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M12 4.5v15m7.5-7.5h-15'
             />
-          </div>
-          <div className='flex justify-between  mt-2'>
-            <button>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='w-5 h-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z'
-                />
-              </svg>
-            </button>
-            <button
-              type='submit'
-              disabled={isLoading}
-              className='bg-burp-500 px-3 font-bold h-10 hover:bg-burp-700 align-middle items-center transition-colors rounded-md '
-            >
-              Comment
-            </button>
-          </div>
+          </svg>
+          <div>New Post</div>
         </div>
-      </form>
-    </div>
+      </button>
+    </>
   );
 }
 

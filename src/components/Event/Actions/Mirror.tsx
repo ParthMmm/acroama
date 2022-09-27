@@ -1,9 +1,16 @@
-import { useMutation } from '@apollo/client';
+import { ApolloCache, useMutation } from '@apollo/client';
 import CustomTooltip from '@components/CustomTooltip';
-import { CreateCollectBroadcastItemResult, Mutation } from '@generated/types';
+import {
+  CreateCollectBroadcastItemResult,
+  CreateMirrorBroadcastItemResult,
+  Mutation,
+} from '@generated/types';
 import getSignature from '@lib/getSignature';
 import splitSignature from '@lib/splitSignature';
-import { CREATE_COLLECT_TYPED_DATA_MUTATION } from '@queries/publication';
+import {
+  CREATE_COLLECT_TYPED_DATA_MUTATION,
+  CREATE_MIRROR_TYPED_DATA_MUTATION,
+} from '@queries/publication';
 import useBroadcast from '@utils/hooks/useBroadcast';
 import { useAccount, useContractWrite, useSignTypedData } from 'wagmi';
 import onError from '@lib/onError';
@@ -13,27 +20,26 @@ import { LENS_HUB_PROXY_ADDRESS } from 'src/constants';
 import { useAppStore } from 'src/store/app';
 import { LensterPublication } from '@generated/lenstertypes';
 import { PROXY_ACTION_MUTATION } from '@queries/fragments/ProxyAction';
+import { useState } from 'react';
 
 type Props = {
   publication: LensterPublication;
 };
-function Collect({ publication }: Props) {
+function Mirror({ publication }: Props) {
   const { address, connector: activeConnector } = useAccount();
   const currentProfile = useAppStore((state) => state.currentProfile);
-
+  const [numMirrors, setNumMirrors] = useState(
+    publication.stats.totalAmountOfMirrors
+  );
   const onCompleted = () => {
-    toast.success('Collect success!');
+    // updateCache();
+    setNumMirrors((numMirrors) => numMirrors + 1);
+    toast.success('Mirror success!');
   };
 
-  const collectModule: any = publication?.collectModule;
+  //   const collectModule: any = publication?.collectModule;
 
-  const {
-    broadcast,
-    data: broadcastData,
-    loading: broadcastLoading,
-  } = useBroadcast({ onCompleted });
-
-  // console.log(collectModule);
+  //   console.log(collectModule);
 
   const {
     data: writeData,
@@ -48,33 +54,42 @@ function Collect({ publication }: Props) {
     onError,
   });
 
+  const { broadcast, loading: broadcastLoading } = useBroadcast({
+    onCompleted,
+  });
+
   const { isLoading: signLoading, signTypedDataAsync } = useSignTypedData({
     onError,
   });
 
-  const [createCollectTypedData, { loading: typedDataLoading }] =
-    useMutation<Mutation>(CREATE_COLLECT_TYPED_DATA_MUTATION, {
+  const [createMirrorTypedData, { loading: typedDataLoading }] =
+    useMutation<Mutation>(CREATE_MIRROR_TYPED_DATA_MUTATION, {
       onCompleted: async ({
-        createCollectTypedData,
+        createMirrorTypedData,
       }: {
-        createCollectTypedData: CreateCollectBroadcastItemResult;
+        createMirrorTypedData: CreateMirrorBroadcastItemResult;
       }) => {
         try {
-          const { id, typedData } = createCollectTypedData;
+          const { id, typedData } = createMirrorTypedData;
           const {
             profileId,
-            pubId,
-            data: collectData,
+            profileIdPointed,
+            pubIdPointed,
+            referenceModule,
+            referenceModuleData,
+            referenceModuleInitData,
             deadline,
           } = typedData?.value;
           const signature = await signTypedDataAsync(getSignature(typedData));
           const { v, r, s } = splitSignature(signature);
           const sig = { v, r, s, deadline };
           const inputStruct = {
-            collector: address,
             profileId,
-            pubId,
-            data: collectData,
+            profileIdPointed,
+            pubIdPointed,
+            referenceModule,
+            referenceModuleData,
+            referenceModuleInitData,
             sig,
           };
 
@@ -90,40 +105,32 @@ function Collect({ publication }: Props) {
       onError,
     });
 
-  const [createCollectProxyAction, { loading: proxyActionLoading }] =
-    useMutation<Mutation>(PROXY_ACTION_MUTATION, {
-      onCompleted,
-      onError,
-    });
-
-  const createCollect = () => {
+  const createMirror = () => {
     if (!currentProfile) {
-      return toast.error('sign in');
+      return toast.error('Sign In');
     }
 
-    if (collectModule?.__typename === 'FreeCollectModuleSettings') {
-      createCollectProxyAction({
-        variables: {
-          request: {
-            collect: { freeCollect: { publicationId: publication?.id } },
-          },
-        },
-      });
-    } else {
-      createCollectTypedData({
-        variables: {
-          //   options: { overrideSigNonce: userSigNonce },
-          request: { publicationId: publication?.id },
-        },
-      });
-    }
+    const request = {
+      profileId: currentProfile?.id,
+      publicationId: publication?.id,
+      referenceModule: {
+        followerOnlyReferenceModule: false,
+      },
+    };
+
+    createMirrorTypedData({
+      variables: {
+        // options: { overrideSigNonce: userSigNonce },
+        request,
+      },
+    });
   };
 
   return (
     <div className='text-white'>
-      <button aria-label='collect' onClick={createCollect}>
+      <button aria-label='collect' onClick={createMirror}>
         <div className='flex space-x-1 items-center '>
-          <CustomTooltip content={'Collect'} defaultOpen={false}>
+          <CustomTooltip content={'Mirror'} defaultOpen={false}>
             <div className='pl-0 p-1.5 rounded-full hover:bg-opacity-40 transition-all'>
               <span>
                 <svg
@@ -137,18 +144,25 @@ function Collect({ publication }: Props) {
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
-                    d='M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z'
+                    d='M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5'
                   />
                 </svg>
               </span>
             </div>
           </CustomTooltip>
 
-          <div>{publication.stats.totalAmountOfCollects}</div>
+          <div>{numMirrors}</div>
         </div>
       </button>
     </div>
   );
 }
 
-export default Collect;
+export default Mirror;
+function signTypedDataAsync(arg0: {
+  domain: { [key: string]: any };
+  types: { [key: string]: any };
+  value: { [key: string]: any };
+}) {
+  throw new Error('Function not implemented.');
+}

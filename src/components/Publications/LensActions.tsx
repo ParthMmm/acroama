@@ -25,7 +25,7 @@ function LensActions({ publicationId }: Props) {
   }
 
   return (
-    <div className='flex gap-6 items-center'>
+    <div className='flex flex-col gap-6 items-center pl-0 p-1.5'>
       {/* <motion.div
         whileHover={{ scale: 1.5 }}
         transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -33,7 +33,7 @@ function LensActions({ publicationId }: Props) {
       <button aria-label='collect'>
         <div className='flex space-x-1 items-center '>
           <CustomTooltip content={'Collect'} defaultOpen={false}>
-            <div className=' p-1.5 rounded-full hover:bg-opacity-40 transition-all'>
+            <div className='  rounded-full hover:bg-opacity-40 transition-all'>
               <span>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -59,7 +59,7 @@ function LensActions({ publicationId }: Props) {
       {/* </motion.div> */}
       <button aria-label='collect'>
         <div className='flex space-x-1 items-center '>
-          <div className='p-1.5 rounded-full hover:bg-opacity-40 transition-all'>
+          <div className=' rounded-full hover:bg-opacity-40 transition-all'>
             <span>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -82,7 +82,7 @@ function LensActions({ publicationId }: Props) {
       </button>
       <button aria-label='collect'>
         <div className='flex space-x-1 items-center '>
-          <div className=' p-1.5 rounded-full hover:bg-opacity-40 transition-all'>
+          <div className='  rounded-full hover:bg-opacity-40 transition-all'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

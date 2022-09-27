@@ -82,8 +82,12 @@ function Events({}: Props) {
       <h2 className='font-normal text-2xl mb-2  mx-4 md:mx-12'>
         latest events
       </h2>
-
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 '>
+      {/* display: grid; max-width: var(--widths-landingMaxWidth); width: 100%; gap:
+      40px 16px; justify-items: stretch; grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 380px);
+      grid-rows-[200px_minmax(900px,_1fr)_100px] grid-template-rows: repeat(2,
+      minmax(0, 1fr)) */}
+      <div className='grid grid-cols-1 grid-rows-3 gap-6 md:grid-cols-3  md:grid-rows-2 md:gap-[40px_16px]  w-full px-6 '>
         {data.map((event) => {
           return <EventCard key={event.id} event={event} />;
         })}

@@ -9,7 +9,6 @@ import { useAppPersistStore } from 'src/store/app';
 import { signedTypeData, splitSignature } from 'src/ethers.service';
 import { lensHub } from 'src/lens-hub';
 import { BigNumber, utils } from 'ethers';
-import dynamic from 'next/dynamic';
 type Props = {};
 
 export const MODULES_QUERY = gql`

@@ -10,12 +10,10 @@ import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
 
 const Actions = dynamic(() => import('./Actions/Actions'), {
-  suspense: true,
   ssr: false,
 });
 
 const Comment = dynamic(() => import('../Publications/Comment'), {
-  suspense: true,
   ssr: false,
 });
 
