@@ -1,20 +1,13 @@
 import React from 'react';
-import { useDropzone } from 'react-dropzone';
-type Props = {
-  onDrop: (acceptedFiles: File[]) => void;
-};
+type Props = {};
 
-function Attachment({ onDrop }: Props) {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    },
-    onDrop,
-  });
+function Attachment({}: Props) {
+  // console.log(acceptedFiles[0]);
+
   return (
-    <div {...getRootProps({ className: 'dropzone' })}>
-      <input {...getInputProps()} />
+    <div>
+      <input name='file' type='file' accept='image/png, image/jpeg' />
+      {/* <button type='submit'>Upload File</button>{' '} */}
       <button>
         <svg
           xmlns='http://www.w3.org/2000/svg'

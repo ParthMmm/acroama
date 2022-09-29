@@ -129,9 +129,9 @@ function Mirror({ publication }: Props) {
   return (
     <div className='text-white'>
       <button aria-label='collect' onClick={createMirror}>
-        <div className='flex space-x-1 items-center '>
+        <div className='flex items-center space-x-1 '>
           <CustomTooltip content={'Mirror'} defaultOpen={false}>
-            <div className='pl-0 p-1.5 rounded-full hover:bg-opacity-40 transition-all'>
+            <div className='rounded-full p-1.5 pl-0 transition-all hover:bg-opacity-40'>
               <span>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -139,7 +139,7 @@ function Mirror({ publication }: Props) {
                   viewBox='0 0 24 24'
                   strokeWidth={1.5}
                   stroke='currentColor'
-                  className='w-5 h-5'
+                  className='h-5 w-5'
                 >
                   <path
                     strokeLinecap='round'

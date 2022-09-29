@@ -3,8 +3,8 @@ import { create } from 'ipfs-http-client';
 const projectId = process.env.NEXT_PUBLIC_INFURA_ID;
 const api_key = process.env.NEXT_PUBLIC_API_KEY;
 
-const client = create({
-  host: 'ipfs.infura.io',
+export const client = create({
+  host: 'infura-ipfs.io',
   port: 5001,
   protocol: 'https',
   headers: {
@@ -17,6 +17,13 @@ const client = create({
 
 export const uploadIpfs = async <T>(data: T) => {
   const result = await client.add(JSON.stringify(data));
+
+  console.log('upload result ipfs', result);
+  return result;
+};
+
+export const uploadImageIpfs = async (data: File) => {
+  const result = await client.add(data);
 
   console.log('upload result ipfs', result);
   return result;

@@ -133,48 +133,52 @@ function Comment({ publication }: Props) {
     if (!profileId) {
       return toast.error('You must be logged in to comment');
     }
-    const ipfsResult = await uploadIpfs({
-      version: '1.0.0',
-      metadata_id: uuidv4(),
-      description: comment,
-      content: comment,
-      external_url: null,
-      image: attachments.length > 0 ? attachments[0]?.item : null,
-      imageMimeType: attachments.length > 0 ? attachments[0]?.type : null,
-      name: `Comment by @${currentProfile?.handle}`,
-      attributes: [],
-      locale: 'en-US',
-      mainContentFocus:
-        attachments.length > 0
-          ? PublicationMainFocus.Image
-          : PublicationMainFocus.TextOnly,
-      media: attachments,
-      appId: 'acroama',
-      createdOn: new Date(),
-    });
 
-    const request = {
-      profileId: currentProfile?.id,
-      publicationId:
-        publication?.__typename === 'Mirror'
-          ? publication?.mirrorOf?.id
-          : publication?.id,
-      contentURI: 'ipfs://' + ipfsResult.path,
-      collectModule: { freeCollectModule: { followerOnly: false } },
-      referenceModule: {
-        followerOnlyReferenceModule: false,
-      },
-    };
+    console.log(attachments);
+    // const ipfsResult = await uploadIpfs({
+    //   version: '1.0.0',
+    //   metadata_id: uuidv4(),
+    //   description: comment,
+    //   content: comment,
+    //   external_url: null,
+    //   image: attachments.length > 0 ? attachments[0]?.item : null,
+    //   imageMimeType: attachments.length > 0 ? attachments[0]?.type : null,
+    //   name: `Comment by @${currentProfile?.handle}`,
+    //   attributes: [],
+    //   locale: 'en-US',
+    //   mainContentFocus:
+    //     attachments.length > 0
+    //       ? PublicationMainFocus.Image
+    //       : PublicationMainFocus.TextOnly,
+    //   media: attachments,
+    //   appId: 'acroama',
+    //   createdOn: new Date(),
+    // });
 
-    console.log({ request });
+    // const request = {
+    //   profileId: currentProfile?.id,
+    //   publicationId:
+    //     publication?.__typename === 'Mirror'
+    //       ? publication?.mirrorOf?.id
+    //       : publication?.id,
+    //   contentURI: 'ipfs://' + ipfsResult.path,
+    //   collectModule: { freeCollectModule: { followerOnly: false } },
+    //   referenceModule: {
+    //     followerOnlyReferenceModule: false,
+    //   },
+    // };
 
-    createCommentTypedData({
-      variables: {
-        // options: { overrideSigNonce: userSigNonce },
-        request,
-      },
-    });
+    // console.log({ request });
+
+    // createCommentTypedData({
+    //   variables: {
+    //     // options: { overrideSigNonce: userSigNonce },
+    //     request,
+    //   },
+    // });
   };
+
+  console.log(attachments);
 
   return (
     <>
@@ -184,16 +188,18 @@ function Comment({ publication }: Props) {
         createComment={createComment}
         setComment={setComment}
         isLoading={isLoading}
+        attachments={attachments}
+        setAttachments={setAttachments}
       />
       <button onClick={() => setOpen(true)}>
-        <div className='flex px-3 font-bold h-10  rounded-lg transition-transform hover:scale-105 align-middle items-center bg-black dark:bg-white text-black '>
+        <div className='flex h-10 items-center rounded-lg  bg-black px-3 align-middle font-bold text-black transition-transform hover:scale-105 dark:bg-white '>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='w-4 h-4'
+            className='h-4 w-4'
           >
             <path
               strokeLinecap='round'

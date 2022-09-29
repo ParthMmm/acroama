@@ -26,6 +26,7 @@ export default defineNextConfig({
       'assets0.dostuffmedia.com',
       'pbs.twimg.com',
       'lens.infura-ipfs.io',
+      'ipfs.infura.io',
     ],
   },
   i18n: {

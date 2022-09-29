@@ -8,6 +8,7 @@ import { trpc } from '@utils/trpc';
 import PublicationCard from '@components/Publications/PublicationCard';
 import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
+import { client, uploadImageIpfs, uploadIpfs } from 'src/ipfs';
 
 const Actions = dynamic(() => import('./Actions/Actions'), {
   ssr: false,

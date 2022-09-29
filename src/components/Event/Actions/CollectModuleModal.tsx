@@ -57,7 +57,7 @@ function CollectModuleModal({ open, setOpen }: Props) {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full max-w-xl transform overflow-hidden rounded-2xl border-2 bg-grod-500 text-white border-gray-600 p-6 text-left align-middle shadow-xl transition-all'>
+              <Dialog.Panel className='w-full max-w-xl transform overflow-hidden rounded-2xl border-2 border-gray-600 bg-grod-500 p-6 text-left align-middle text-white shadow-xl transition-all'>
                 <div className='flex flex-row justify-between'>
                   <Dialog.Title className='text-lg font-light '>
                     New Post
@@ -69,7 +69,7 @@ function CollectModuleModal({ open, setOpen }: Props) {
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-6 h-6'
+                      className='h-6 w-6'
                     >
                       <path
                         strokeLinecap='round'

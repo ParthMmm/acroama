@@ -1,6 +1,12 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import {
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+} from 'react';
+import { useForm, useFormState } from 'react-hook-form';
 import { Fragment, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { gql, useQuery } from '@apollo/client';
@@ -8,12 +14,22 @@ import Image from 'next/image';
 import Attachment from './Attachment';
 import CollectModule from './CollectModule';
 import * as Collapsible from '@radix-ui/react-collapsible';
+import { create } from 'ipfs-http-client';
+import { uploadImageIpfs, uploadIpfs } from 'src/ipfs';
+import { v4 as uuid } from 'uuid';
+import { client } from 'src/ipfs';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LensterAttachment } from '@generated/lenstertypes';
+
 type Props = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   createComment: () => Promise<string | undefined>;
   setComment: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
+  attachments: LensterAttachment[];
+  setAttachments: Dispatch<SetStateAction<LensterAttachment[]>>;
 };
 
 export const MODULES_QUERY = gql`
@@ -32,6 +48,12 @@ export const MODULES_QUERY = gql`
     }
   }
 `;
+const validationSchema = z.object({
+  comment: z.string({
+    required_error: 'required',
+    invalid_type_error: ' must be a string',
+  }),
+});
 
 function CommentModal({
   open,
@@ -39,6 +61,8 @@ function CommentModal({
   createComment,
   setComment,
   isLoading,
+  setAttachments,
+  attachments,
 }: Props) {
   const [file, setFile] = useState('');
   const [fileInfo, setFileInfo] = useState(null);
@@ -48,29 +72,60 @@ function CommentModal({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: zodResolver(validationSchema) });
+  const [fileUrl, updateFileUrl] = useState(``);
   const [moduleOpen, setModuleOpen] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-      };
-      let c = reader.readAsArrayBuffer(file);
-      setFile(URL.createObjectURL(file));
-    });
-  }, []);
   const moduleQuery = useQuery(MODULES_QUERY);
 
   //   useEffect(() => {
   //     setFile(acceptedFiles.map((single) => URL.createObjectURL(single))[0]);
   //   }, [acceptedFiles]);
-  console.log(moduleQuery.data);
+  // console.log(moduleQuery.data);
+
+  const onChange = (e) => {
+    const file = e.target.files[0];
+    setFile(URL.createObjectURL(file));
+    setFileInfo(file);
+  };
+
+  // const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const form = event.target as HTMLFormElement;
+  //   const files = (form[0] as HTMLInputElement).files;
+
+  //   if (!files || files.length === 0) {
+  //     return alert('No files selected');
+  //   }
+
+  //   const file1 = files[0];
+  //   console.log(file1);
+  //   // upload files
+  //   // const result = await uploadImageIpfs(file1);
+
+  //   console.log(result);
+
+  //   form.reset();
+  // };
+
+  const submitHandler = async (data) => {
+    console.log(data);
+    // console.log(file)
+    console.log(fileInfo?.name, fileInfo?.size, fileInfo?.type);
+
+    // const result = await uploadImageIpfs(fileInfo);
+    // result.path
+    const attachment: LensterAttachment = {
+      item: 'QmVYbNGQMHjCJxDfUyp2veVkBCVCkZYhZhveKsZ1UeKhsd',
+      type: fileInfo?.type,
+      altTag: '',
+    };
+    // console.log(result);
+
+    attachments.push(attachment);
+    createComment();
+    console.log(attachments);
+  };
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -86,7 +141,7 @@ function CommentModal({
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full max-w-xl transform overflow-hidden rounded-2xl border-2 bg-grod-500 text-white border-gray-600 p-6 text-left align-middle shadow-xl transition-all'>
+              <Dialog.Panel className='w-full max-w-xl transform overflow-hidden rounded-2xl border-2 border-gray-600 bg-grod-500 p-6 text-left align-middle text-white shadow-xl transition-all'>
                 <div className='flex flex-row justify-between'>
                   <Dialog.Title className='text-lg font-light '>
                     New Post
@@ -98,7 +153,7 @@ function CommentModal({
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-6 h-6'
+                      className='h-6 w-6'
                     >
                       <path
                         strokeLinecap='round'
@@ -113,17 +168,17 @@ function CommentModal({
                   {/* This will permanently deactivate your account */}
                 </Dialog.Description>
                 <Collapsible.Root open={moduleOpen}>
-                  <form onSubmit={handleSubmit(createComment)}>
-                    <div className='flex flex-col w-full  p-4'>
+                  <form onSubmit={handleSubmit(submitHandler)}>
+                    <div className='flex w-full flex-col  p-4'>
                       <div className=''>
                         <textarea
                           {...register('comment', { required: true })}
                           placeholder='comment'
-                          className='w-full p-4 rounded-md resize-none text-white bg-grod-400 outline-none focus:placeholder-opacity-25 focus:ring focus:ring-burp-500 '
-                          onChange={(e) => setComment(e.target.value)}
+                          className='w-full resize-none rounded-md bg-grod-400 p-4 text-white outline-none focus:placeholder-opacity-25 focus:ring focus:ring-burp-500 '
+                          // onChange={(e) => setComment(e.target.value)}
                         />
                       </div>
-                      <div className='flex justify-between  mt-2'>
+                      <div className='mt-2 flex  justify-between'>
                         <div className=''>
                           {/* <Collapsible.Trigger asChild>
                             <CollectModule
@@ -132,12 +187,52 @@ function CommentModal({
                             />
                           </Collapsible.Trigger> */}
 
-                          <Attachment onDrop={onDrop} />
+                          {/* <button type='submit'>Upload File</button>{' '} */}
+
+                          {/* <label
+                            className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
+                            htmlFor='file_input'
+                          >
+                            Upload file
+                          </label> */}
+                          {/* <input
+                            className='block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'
+                            id='file_input'
+                            type='file'
+                          /> */}
+
+                          <label
+                            htmlFor='file_input'
+                            className='cursor-pointer'
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='h-5 w-5'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z'
+                              />
+                            </svg>
+                          </label>
+                          <input
+                            name='file'
+                            type='file'
+                            accept='image/png, image/jpeg'
+                            className='hidden'
+                            id='file_input'
+                            onChange={onChange}
+                          />
                         </div>
                         <button
                           type='submit'
                           disabled={isLoading}
-                          className='bg-burp-500 px-3 font-bold h-10 hover:bg-burp-700 align-middle items-center transition-colors rounded-md '
+                          className='h-10 items-center rounded-md bg-burp-500 px-3 align-middle font-bold transition-colors hover:bg-burp-700 '
                         >
                           Submit
                         </button>
@@ -155,7 +250,7 @@ function CommentModal({
                                 viewBox='0 0 24 24'
                                 strokeWidth={1.5}
                                 stroke='currentColor'
-                                className='w-5 h-5'
+                                className='h-5 w-5'
                               >
                                 <path
                                   strokeLinecap='round'
@@ -211,6 +306,13 @@ function CommentModal({
               </Dialog.Panel>
             </Transition.Child>
           </div>
+          <Image
+            src={fileUrl ? fileUrl : ''}
+            height='100%'
+            width='100%'
+            alt={fileUrl ? 'img' : ''}
+            layout='responsive'
+          />
         </div>
       </Dialog>
     </Transition>
